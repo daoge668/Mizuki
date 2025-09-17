@@ -18,11 +18,11 @@ import { getTranslateLanguageFromConfig } from "./utils/language-utils";
 // 移除i18n导入以避免循环依赖
 
 // 定义站点语言
-const SITE_LANG = "en"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
+const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 
 export const siteConfig: SiteConfig = {
-	title: "Mizuki",
-	subtitle: "One demo website",
+	title: "Daoge",
+	subtitle: "Online",
 
 	lang: SITE_LANG,
 
@@ -175,67 +175,67 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.Archive,
 		// 支持自定义导航栏链接,并且支持多级菜单,3.1版本新加
 		{
-			name: "Links",
+			name: "链接",
 			url: "/links/",
 			icon: "material-symbols:link",
 			children: [
 				{
 					name: "GitHub",
-					url: "https://github.com/matsuzaka-yuki/Mizuki",
+					url: "https://github.com/daoge668",
 					external: true,
 					icon: "fa6-brands:github",
 				},
 				{
-					name: "Bilibili",
-					url: "https://space.bilibili.com/701864046",
+					name: "QQ",
+					url: "https://user.qzone.qq.com/2318891066/infocenter",
 					external: true,
-					icon: "fa6-brands:bilibili",
+					icon: "fa6-brands:qq",
 				},
 				{
-					name: "Gitee",
-					url: "https://gitee.com/matsuzakayuki/Mizuki",
+					name: "知乎",
+					url: "https://www.zhihu.com/people/wei-xin-yong-hu-34-1-80-94",
 					external: true,
-					icon: "mdi:git",
+					icon: "fa6-brands:zhihu",
 				},
 			],
 		},
 		{
-			name: "My",
+			name: "我的",
 			url: "/content/",
 			icon: "material-symbols:person",
 			children: [
 				LinkPreset.Anime,
 				LinkPreset.Diary,
 				{
-					name: "Gallery",
+					name: "相册",
 					url: "/albums/",
 					icon: "material-symbols:photo-library",
 				},
 			],
 		},
 		{
-			name: "About",
+			name: "关于",
 			url: "/content/",
 			icon: "material-symbols:info",
 			children: [LinkPreset.About, LinkPreset.Friends],
 		},
 		{
-			name: "Others",
+			name: "其他",
 			url: "#",
 			icon: "material-symbols:more-horiz",
 			children: [
 				{
-					name: "Projects",
+					name: "项目",
 					url: "/projects/",
 					icon: "material-symbols:work",
 				},
 				{
-					name: "Skills",
+					name: "技能",
 					url: "/skills/",
 					icon: "material-symbols:psychology",
 				},
 				{
-					name: "Timeline",
+					name: "时间线",
 					url: "/timeline/",
 					icon: "material-symbols:timeline",
 				},
@@ -246,28 +246,23 @@ export const navBarConfig: NavBarConfig = {
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.png", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
-	name: "Mizuki",
-	bio: "The world is big, you have to go and see",
+	name: "Daoge",
+	bio: "It's not so bad",
 	links: [
 		{
-			name: "Bilibli",
-			icon: "fa6-brands:bilibili",
-			url: "https://space.bilibili.com/701864046",
-		},
-		{
-			name: "Gitee",
-			icon: "mdi:git",
-			url: "https://gitee.com/matsuzakayuki",
-		},
-		{
 			name: "GitHub",
+			url: "https://github.com/daoge668",
 			icon: "fa6-brands:github",
-			url: "https://github.com/matsuzaka-yuki",
 		},
 		{
-			name: "Discord",
-			icon: "fa6-brands:discord",
-			url: "https://discord.gg/MqW6TcQtVM",
+			name: "QQ",
+			url: "https://qm.qq.com/q/bzeBd7Jh96",
+			icon: "fa6-brands:qq",
+		},
+		{
+			name: "知乎",
+			url: "https://www.zhihu.com/people/wei-xin-yong-hu-34-1-80-94",
+			icon: "fa6-brands:zhihu",
 		},
 	],
 	// Umami统计部份，记得在layout插入Umami的head标签
@@ -299,12 +294,12 @@ export const commentConfig: CommentConfig = {
 };
 
 export const announcementConfig: AnnouncementConfig = {
-	title: "Announcement", // 公告标题
-	content: "Welcome to my blog! This is a sample announcement.", // 公告内容
+	title: "公告", // 公告标题
+	content: "欢迎来到我的博客！", // 公告内容
 	closable: true, // 允许用户关闭公告
 	link: {
 		enable: true, // 启用链接
-		text: "Learn More", // 链接文本
+		text: "了解更多", // 链接文本
 		url: "/about/", // 链接 URL
 		external: false, // 内部链接
 	},
@@ -467,7 +462,7 @@ export const pioConfig: import("./types/config").PioConfig = {
 	mode: "draggable", // 默认为可拖拽模式
 	hiddenOnMobile: true, // 默认在移动设备上隐藏
 	dialog: {
-		welcome: "Welcome to Mizuki Website!", // 欢迎词
+		welcome: "Welcome to DaogeOnline!", // 欢迎词
 		touch: [
 			"What are you doing?",
 			"Stop touching me!",
