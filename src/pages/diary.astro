@@ -5,12 +5,36 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
 // 示例即刻短文数据
 const moments = [
+	// {
+	// 	id: 1,
+	// 	content: "樱花下落速度的每秒五厘米!",
+	// 	date: "2025-01-15T10:30:00Z",
+	// 	images: ["/images/diary/sakura.jpg", "/images/diary/1.jpg"],
+	// },
+	{
+		id: 3,
+		content: "更新了一下博客，原本时间是静态的，改为动态时间",
+		date: "2025-09-17T08:38:00",
+		images: [],
+	},
+	{
+		id: 3,
+		content: "研究了一下git,现在可以在拿着轻薄本在学校里面继续写项目了",
+		date: "2025-09-16T22:00:00",
+		images: [],
+	},
+	{
+		id: 2,
+		content: "苍穹外卖动工！",
+		date: "2025-09-11T18:00:00",
+		images: [],
+	},
 	{
 		id: 1,
 		content:
-			"The falling speed of cherry blossoms is five centimeters per second!",
-		date: "2025-01-15T10:30:00Z",
-		images: ["/images/diary/sakura.jpg", "/images/diary/1.jpg"],
+			"不是这算法怎么这么难啊，简直折磨，leetcode第四题半小时写完暴力算法，题解花了一个办小时才看懂，我不玩了QAQ",
+		date: "2025-09-11T17:30:00",
+		images: [],
 	},
 ];
 
@@ -57,7 +81,7 @@ function formatTime(dateString: string): string {
 
 				<!-- 短文列表 -->
 				<div class="moments-timeline">
-					<div class="timeline-list space-y-4">
+					<div class="timeline-list space-y-4" data-minutes-ago={i18n(I18nKey.diaryMinutesAgo)} data-hours-ago={i18n(I18nKey.diaryHoursAgo)} data-days-ago={i18n(I18nKey.diaryDaysAgo)}>
 					{moments.map(moment => (
 						<div class="moment-item card-base p-4 md:p-6 lg:p-8 hover:shadow-lg transition-all">
 								<div class="moment-content">
@@ -84,7 +108,7 @@ function formatTime(dateString: string): string {
 								<div class="moment-footer flex justify-between items-center">
 									<div class="moment-time flex items-center gap-1.5 text-75 text-xs md:text-sm lg:text-base">
 										<i class="time-icon text-xs md:text-sm">🕐</i>
-										<time datetime={moment.date}>
+										<time datetime={moment.date} class="dynamic-time">
 											{formatTime(moment.date)}
 										</time>
 									</div>
@@ -103,6 +127,53 @@ function formatTime(dateString: string): string {
 		</div>
 	</div>
 </MainGridLayout>
+
+<script>
+	document.addEventListener("astro:page-load", () => {
+		const timelineList = document.querySelector(".timeline-list") as HTMLElement;
+		if (!timelineList) return;
+
+		const minutesAgoText = timelineList.dataset.minutesAgo || " 分钟前";
+		const hoursAgoText = timelineList.dataset.hoursAgo || " 小时前";
+		const daysAgoText = timelineList.dataset.daysAgo || " 天前";
+
+		function formatTime(dateString) {
+			const now = new Date();
+			const date = new Date(dateString);
+			const diffInMinutes = Math.floor(
+				(now.getTime() - date.getTime()) / (1000 * 60),
+			);
+
+			if (diffInMinutes < 1) {
+				return `1${minutesAgoText}`;
+			}
+			if (diffInMinutes < 60) {
+				return `${diffInMinutes}${minutesAgoText}`;
+			}
+			if (diffInMinutes < 1440) {
+				// 24小时
+				const hours = Math.floor(diffInMinutes / 60);
+				return `${hours}${hoursAgoText}`;
+			}
+			const days = Math.floor(diffInMinutes / 1440);
+			return `${days}${daysAgoText}`;
+		}
+
+		function updateTimes() {
+			const timeElements = document.querySelectorAll(".dynamic-time");
+			timeElements.forEach((timeEl) => {
+				const dateString = timeEl.getAttribute("datetime");
+				if (dateString) {
+					timeEl.textContent = formatTime(dateString);
+				}
+			});
+		}
+
+		updateTimes();
+		// Update every minute
+		setInterval(updateTimes, 60000);
+	});
+</script>
 
 <style>
 	.card-base {
@@ -257,5 +328,3 @@ function formatTime(dateString: string): string {
 		}
 	}
 </style>
-
-

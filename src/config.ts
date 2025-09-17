@@ -86,11 +86,11 @@ export const siteConfig: SiteConfig = {
 
 		homeText: {
 			enable: true, // 在主页显示自定义文本
-			title: "Beautiful Mizuki!", // 主页横幅主标题
+			title: "Daoge Online", // 主页横幅主标题
 
 			subtitle: [
-				"A Showcase Demo Site",
-				"Carousel Highlight: Innovation",
+				"Attention is all you need",
+				"读书和抽大麻没有区别，都是捧着死掉的植物产生幻觉",
 				"Carousel Focus: User Experience",
 				"Carousel Spot: Core Advantages",
 			],
@@ -118,14 +118,14 @@ export const siteConfig: SiteConfig = {
 		enable: true, // 启用目录功能
 		depth: 3, // 目录深度，1-6，1 表示只显示 h1 标题，2 表示显示 h1 和 h2 标题，依此类推
 	},
-	generateOgImages: false, // 启用生成OpenGraph图片功能,注意开启后要渲染很长时间，不建议本地调试的时候开启
+	generateOgImages: true, // 启用生成OpenGraph图片功能,注意开启后要渲染很长时间，不建议本地调试的时候开启
 	favicon: [
 		// 留空以使用默认 favicon
 		// {
-		//   src: '/favicon/icon.png',    // 图标文件路径
-		//   theme: 'light',              // 可选，指定主题 'light' | 'dark'
-		//   sizes: '32x32',              // 可选，图标大小
-		// }
+		// 	// src: "/favicon/favicon-dark-128.png", // 图标文件路径
+		// 	// // theme: "dark", // 可选，指定主题 'light' | 'dark'
+		// 	// sizes: "128x128", // 可选，图标大小
+		// },
 	],
 
 	// 字体配置
@@ -245,7 +245,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "assets/images/avatar.png", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
+	avatar: "assets/images/head.png", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
 	name: "Daoge",
 	bio: "It's not so bad",
 	links: [
@@ -460,7 +460,7 @@ export const pioConfig: import("./types/config").PioConfig = {
 	width: 280, // 默认宽度
 	height: 250, // 默认高度
 	mode: "draggable", // 默认为可拖拽模式
-	hiddenOnMobile: true, // 默认在移动设备上隐藏
+	hiddenOnMobile: false, // 默认在移动设备上隐藏
 	dialog: {
 		welcome: "Welcome to DaogeOnline!", // 欢迎词
 		touch: [
