@@ -6,7 +6,14 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 // 示例即刻短文数据
 const moments = [
 	{
-		id: 3,
+		id: 5,
+		content:
+			"不是，这学期老师怎么都这么严了？想念大一的高数老师了，课讲得不赖，还不点名QAQ",
+		date: "2025-09-18T08:48:00",
+		images: [],
+	},
+	{
+		id: 4,
 		content: "更新了一下博客，原本时间是静态的，改为动态时间",
 		date: "2025-09-17T08:38:00",
 		images: [],
@@ -32,25 +39,11 @@ const moments = [
 	},
 ];
 
-// 时间格式化函数
-function formatTime(dateString: string): string {
-	const now = new Date();
-	const date = new Date(dateString);
-	const diffInMinutes = Math.floor(
-		(now.getTime() - date.getTime()) / (1000 * 60),
-	);
-
-	if (diffInMinutes < 60) {
-		return `${diffInMinutes}${i18n(I18nKey.diaryMinutesAgo)}`;
-	}
-	if (diffInMinutes < 1440) {
-		// 24小时
-		const hours = Math.floor(diffInMinutes / 60);
-		return `${hours}${i18n(I18nKey.diaryHoursAgo)}`;
-	}
-	const days = Math.floor(diffInMinutes / 1440);
-	return `${days}${i18n(I18nKey.diaryDaysAgo)}`;
-}
+const i18nStrings = {
+	minutesAgo: i18n(I18nKey.diaryMinutesAgo),
+	hoursAgo: i18n(I18nKey.diaryHoursAgo),
+	daysAgo: i18n(I18nKey.diaryDaysAgo),
+};
 ---
 
 <MainGridLayout title={i18n(I18nKey.diary)} description="即刻短文">
@@ -102,8 +95,8 @@ function formatTime(dateString: string): string {
 								<div class="moment-footer flex justify-between items-center">
 									<div class="moment-time flex items-center gap-1.5 text-75 text-xs md:text-sm lg:text-base">
 										<i class="time-icon text-xs md:text-sm">🕐</i>
-										<time datetime={moment.date}>
-											{formatTime(moment.date)}
+										<time datetime={moment.date} class="dynamic-time">
+											{moment.date.split('T')[0]}
 										</time>
 									</div>
 									
@@ -121,6 +114,42 @@ function formatTime(dateString: string): string {
 		</div>
 	</div>
 </MainGridLayout>
+
+<script define:vars={{ i18nStrings }}>
+    function formatTime() {
+        const timeElements = document.querySelectorAll('.dynamic-time');
+        const i18n = i18nStrings;
+
+        timeElements.forEach(timeEl => {
+            const dateString = timeEl.getAttribute('datetime');
+            if (!dateString) return;
+
+            const now = new Date();
+            const date = new Date(dateString);
+            const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+
+            let formattedTime;
+            if (diffInMinutes < 1) {
+                formattedTime = `刚刚`;
+            } else if (diffInMinutes < 60) {
+                formattedTime = `${diffInMinutes}${i18n.minutesAgo}`;
+            } else if (diffInMinutes < 1440) { // 24 hours
+                const hours = Math.floor(diffInMinutes / 60);
+                formattedTime = `${hours}${i18n.hoursAgo}`;
+            } else {
+                const days = Math.floor(diffInMinutes / 1440);
+                formattedTime = `${days}${i18n.daysAgo}`;
+            }
+            timeEl.textContent = formattedTime;
+        });
+    }
+
+    // Initial call
+    formatTime();
+
+    // Update every minute
+    setInterval(formatTime, 60000);
+</script>
 
 <style>
 	.card-base {
@@ -275,5 +304,3 @@ function formatTime(dateString: string): string {
 		}
 	}
 </style>
-
-

@@ -18,7 +18,7 @@ let meting_api =
 	musicPlayerConfig.meting_api ??
 	"https://www.bilibili.uno/api?server=:server&type=:type&id=:id&auth=:auth&r=:r";
 // Meting API 的 ID，从配置中获取或使用默认值
-let meting_id = musicPlayerConfig.id ?? "14164869977";
+let meting_id = musicPlayerConfig.id ?? "14302360366";
 // Meting API 的服务器，从配置中获取或使用默认值,有的meting的api源支持更多平台,一般来说,netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
 let meting_server = musicPlayerConfig.server ?? "netease";
 // Meting API 的类型，从配置中获取或使用默认值
@@ -247,7 +247,7 @@ function handleLoadSuccess() {
 	}
 }
 
-function handleLoadError(event: Event) {
+function handleLoadError(_event: Event) {
 	isLoading = false;
 	showErrorMessage(`无法播放 "${currentSong.title}"，正在尝试下一首...`);
 	if (playlist.length > 1) setTimeout(() => nextSong(), 1000);
@@ -326,7 +326,7 @@ function handleAudioEvents() {
 			isPlaying = false;
 		}
 	});
-	audio.addEventListener("error", (event) => {
+	audio.addEventListener("error", (_event) => {
 		isLoading = false;
 	});
 	audio.addEventListener("stalled", () => {});
