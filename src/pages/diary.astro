@@ -176,11 +176,10 @@ function formatTimeAgo(
         });
     }
 
-    // Initial call
-    formatTime();
-
-    // Update every minute
-    setInterval(formatTime, 60000);
+    document.addEventListener('astro:page-load', () => {
+        formatTime();
+        setInterval(formatTime, 60000);
+    });
 </script>
 
 <style>
