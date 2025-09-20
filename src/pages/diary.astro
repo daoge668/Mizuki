@@ -6,10 +6,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 // 示例即刻短文数据
 const moments = [
 	{
-		id: 5,
+		id: 6,
 		content:
 			"前几天把QQ头像换成二次元风格，图片是AI跑出来的，然后把QQ的性别也改成女性了，之后网上的陌生人对我的态度都变得好很多，老天，我不想当男人了，把我变成男娘吧。",
-		date: "2025-09-20T08:48:00",
+		date: "2025-09-20T22:26:00",
 		images: [],
 	},
 	{
@@ -51,6 +51,31 @@ const i18nStrings = {
 	hoursAgo: i18n(I18nKey.diaryHoursAgo),
 	daysAgo: i18n(I18nKey.diaryDaysAgo),
 };
+
+function formatTimeAgo(
+	dateString: string,
+	i18n: { minutesAgo: string; hoursAgo: string; daysAgo: string },
+) {
+	const now = new Date();
+	const date = new Date(dateString);
+	const diffInMinutes = Math.floor(
+		(now.getTime() - date.getTime()) / (1000 * 60),
+	);
+
+	if (diffInMinutes < 1) {
+		return "刚刚";
+	}
+	if (diffInMinutes < 60) {
+		return `${diffInMinutes}${i18n.minutesAgo}`;
+	}
+	if (diffInMinutes < 1440) {
+		// 24 hours
+		const hours = Math.floor(diffInMinutes / 60);
+		return `${hours}${i18n.hoursAgo}`;
+	}
+	const days = Math.floor(diffInMinutes / 1440);
+	return `${days}${i18n.daysAgo}`;
+}
 ---
 
 <MainGridLayout title={i18n(I18nKey.diary)} description="即刻短文">
@@ -103,7 +128,7 @@ const i18nStrings = {
 									<div class="moment-time flex items-center gap-1.5 text-75 text-xs md:text-sm lg:text-base">
 										<i class="time-icon text-xs md:text-sm">🕐</i>
 										<time datetime={moment.date} class="dynamic-time">
-											{moment.date.split('T')[0]}
+											{formatTimeAgo(moment.date, i18nStrings)}
 										</time>
 									</div>
 									
