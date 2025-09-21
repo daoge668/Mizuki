@@ -46,35 +46,24 @@ const moments = [
 	},
 ];
 
-const i18nStrings = {
-	minutesAgo: i18n(I18nKey.diaryMinutesAgo),
-	hoursAgo: i18n(I18nKey.diaryHoursAgo),
-	daysAgo: i18n(I18nKey.diaryDaysAgo),
-};
-
-function formatTimeAgo(
-	dateString: string,
-	i18n: { minutesAgo: string; hoursAgo: string; daysAgo: string },
-) {
+// 时间格式化函数
+function formatTime(dateString: string): string {
 	const now = new Date();
 	const date = new Date(dateString);
 	const diffInMinutes = Math.floor(
 		(now.getTime() - date.getTime()) / (1000 * 60),
 	);
 
-	if (diffInMinutes < 1) {
-		return "刚刚";
-	}
 	if (diffInMinutes < 60) {
-		return `${diffInMinutes}${i18n.minutesAgo}`;
+		return `${diffInMinutes}${i18n(I18nKey.diaryMinutesAgo)}`;
 	}
 	if (diffInMinutes < 1440) {
-		// 24 hours
+		// 24小时
 		const hours = Math.floor(diffInMinutes / 60);
-		return `${hours}${i18n.hoursAgo}`;
+		return `${hours}${i18n(I18nKey.diaryHoursAgo)}`;
 	}
 	const days = Math.floor(diffInMinutes / 1440);
-	return `${days}${i18n.daysAgo}`;
+	return `${days}${i18n(I18nKey.diaryDaysAgo)}`;
 }
 ---
 
@@ -127,8 +116,8 @@ function formatTimeAgo(
 								<div class="moment-footer flex justify-between items-center">
 									<div class="moment-time flex items-center gap-1.5 text-75 text-xs md:text-sm lg:text-base">
 										<i class="time-icon text-xs md:text-sm">🕐</i>
-										<time datetime={moment.date} class="dynamic-time">
-											{formatTimeAgo(moment.date, i18nStrings)}
+										<time datetime={moment.date}>
+											{formatTime(moment.date)}
 										</time>
 									</div>
 									
@@ -146,41 +135,6 @@ function formatTimeAgo(
 		</div>
 	</div>
 </MainGridLayout>
-
-<script define:vars={{ i18nStrings }}>
-    function formatTime() {
-        const timeElements = document.querySelectorAll('.dynamic-time');
-        const i18n = i18nStrings;
-
-        timeElements.forEach(timeEl => {
-            const dateString = timeEl.getAttribute('datetime');
-            if (!dateString) return;
-
-            const now = new Date();
-            const date = new Date(dateString);
-            const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-
-            let formattedTime;
-            if (diffInMinutes < 1) {
-                formattedTime = `刚刚`;
-            } else if (diffInMinutes < 60) {
-                formattedTime = `${diffInMinutes}${i18n.minutesAgo}`;
-            } else if (diffInMinutes < 1440) { // 24 hours
-                const hours = Math.floor(diffInMinutes / 60);
-                formattedTime = `${hours}${i18n.hoursAgo}`;
-            } else {
-                const days = Math.floor(diffInMinutes / 1440);
-                formattedTime = `${days}${i18n.daysAgo}`;
-            }
-            timeEl.textContent = formattedTime;
-        });
-    }
-
-    document.addEventListener('astro:page-load', () => {
-        formatTime();
-        setInterval(formatTime, 60000);
-    });
-</script>
 
 <style>
 	.card-base {
@@ -335,3 +289,5 @@ function formatTimeAgo(
 		}
 	}
 </style>
+
+
