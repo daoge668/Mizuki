@@ -18,22 +18,21 @@ export interface Project {
 }
 
 export const projectsData: Project[] = [
-	// {
-	// 	id: "mizuki-blog",
-	// 	title: "Mizuki Blog Theme",
-	// 	description:
-	// 		"Modern blog theme developed based on the Astro framework, supporting multilingual, dark mode, and responsive design features.",
-	// 	image: "",
-	// 	category: "web",
-	// 	techStack: ["Astro", "TypeScript", "Tailwind CSS", "Svelte"],
-	// 	status: "completed",
-	// 	liveDemo: "https://blog.example.com",
-	// 	sourceCode: "https://github.com/example/mizuki",
-	// 	startDate: "2024-01-01",
-	// 	endDate: "2024-06-01",
-	// 	featured: true,
-	// 	tags: ["Blog", "Theme", "Open Source"],
-	// },
+	{
+		id: "sky-take-out",
+		title: "苍穹外卖",
+		description: "由java编写的后端项目",
+		image: "",
+		category: "web",
+		techStack: ["Java", "Maven", "Mysql", "Redis", "Springboot"],
+		status: "completed",
+		liveDemo: "https://blog.example.com",
+		sourceCode: "https://github.com/example/mizuki",
+		startDate: "2025-09-01",
+		endDate: "2024-10-01",
+		featured: true,
+		tags: ["java", "后端", "demo"],
+	},
 	// {
 	// 	id: "portfolio-website",
 	// 	title: "Personal Portfolio",
