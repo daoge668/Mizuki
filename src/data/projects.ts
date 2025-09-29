@@ -29,7 +29,7 @@ export const projectsData: Project[] = [
 		liveDemo: "https://blog.example.com",
 		sourceCode: "https://github.com/example/mizuki",
 		startDate: "2025-09-01",
-		endDate: "2024-10-01",
+		endDate: "2025-10-01",
 		featured: true,
 		tags: ["java", "后端", "demo"],
 	},
