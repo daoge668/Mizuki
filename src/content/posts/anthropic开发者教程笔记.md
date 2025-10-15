@@ -138,7 +138,6 @@ Claude 的文本生成过程包含三个关键步骤：
 #### 实际问题
 
 默认情况下，当要求 Claude 生成 JSON 时，可能会得到：
-````markdown
 ```json
 {
   "source": ["aws.ec2"],
@@ -149,7 +148,6 @@ Claude 的文本生成过程包含三个关键步骤：
 }
 ```
 This rule captures EC2 instance state changes when instances start running.
-````
 
 JSON 格式正确，但被包裹在 Markdown 格式中并包含解释性文本，降低了用户体验的流畅度。
 
@@ -176,14 +174,128 @@ text = chat(messages, stop_sequences=["```"])
 
 ### 第二部分：提示工程与评估
 
-将提示词的评估简单分为三个步骤
+#### 什么是提示工程？
 
-第一
+> **提示工程 (Prompt Engineering)** 是通过设计和优化输入提示 (Prompt)，从而引导大语言模型 (LLM) 生成更准确、更相关、更高质量输出的技术。
 
+简单来说，相比于随意的提问，一个结构化、清晰具体的提示词能让模型更好地理解你的意图，从而给出更出色的回答。
+
+那么，如何科学地判断一个提示词是否优秀呢？这就引出了系统化的**提示词评估**。
+
+#### 提示词评估工作流
+
+评估提示词表现遵循一个清晰的迭代流程，可以简单分为三个步骤：
+
+![评估流程图](https://blog-daoge.oss-cn-beijing.aliyuncs.com/Snipaste_2025-10-15_21-08-18.png)
+
+1.  **生成测试数据集**  
+    将需要测试的提示词模板与一系列不同的问题或变量结合，批量发送给 Claude，并收集所有响应，形成评估的基础数据集。
+
+2.  **执行评估**  
+    使用预设的评价器 (Grader) 对每个响应进行打分。评价器会根据特定标准（如格式是否正确、回答是否相关）来判断输出质量。
+
+3.  **分析与优化**  
+    分析评估分数，找出表现不佳的案例。根据这些反馈优化提示词，然后重复前两个步骤，直到获得满意的平均分数。
 
 ---
 
-### 第三部分：Claude的工具使用
+### 三种核心评价器 (Graders)
+
+为了自动化地执行评估，我们可以使用不同类型的评价器。
+
+![三种评价器](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2Fa46l9irobhg0f5webscixp0bs%2Fpublic%2F1748623451%2F04_-_005_-_Model_Based_Grading_03.1748623451557.png)
+
+#### 1. 代码评价器 (Code Graders)
+
+代码评价器通过编写程序来检查模型输出是否符合特定规则，适用于客观、明确的评估任务。
+
+**常见用途：**
+- 检查输出的长度
+- 验证是否包含或不包含特定关键词
+- 对 JSON、Python 代码或正则表达式进行语法验证
+
+**实现示例：语法验证**
+
+以下函数通过尝试解析输出来验证其语法是否正确。如果解析成功，返回满分10分；如果失败，则返回0分。
+
+![语法验证代码](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2Fa46l9irobhg0f5webscixp0bs%2Fpublic%2F1748623445%2F04_-_006_-_Code_Based_Grading_02.1748623445106.png)
+
+```python
+def validate_json(text):
+    try:
+        json.loads(text.strip())
+        return 10
+    except json.JSONDecodeError:
+        return 0
+
+def validate_python(text):
+    try:
+        ast.parse(text.strip())
+        return 10
+    except SyntaxError:
+        return 0
+
+def validate_regex(text):
+    try:
+        re.compile(text.strip())
+        return 10
+    except re.error:
+        return 0
+```
+
+#### 2. 模型评价器 (Model Graders)
+
+模型评价器将原始输出和评估任务再次发送给另一个大语言模型（如 Claude），利用模型本身的能力进行更主观、更复杂的评估。
+
+**适用场景：**
+- 回答的质量与帮助性
+- 指令遵循的准确度
+- 内容的完整性与安全性
+
+**实现示例：结构化评估**
+
+为了避免模型只给出一个模糊的分数（如6分），我们可以要求它提供结构化的 JSON 输出，从而增加评估的透明度。
+
+```python
+def grade_by_model(test_case, output):
+    # 创建评估提示词
+    eval_prompt = """
+    You are an expert code reviewer. Evaluate this AI-generated solution.
+    
+    Task: {task}
+    Solution: {solution}
+    
+    Provide your evaluation as a structured JSON object with:
+    - "strengths": An array of 1-3 key strengths
+    - "weaknesses": An array of 1-3 key areas for improvement  
+    - "reasoning": A concise explanation of your assessment
+    - "score": A number between 1-10
+    """
+    
+    messages = []
+    # 此处假设 add_user_message 等函数已定义
+    add_user_message(messages, eval_prompt.format(task=test_case, solution=output))
+    add_assistant_message(messages, "```json")
+    
+    eval_text = chat(messages, stop_sequences=["```"])
+    return json.loads(eval_text)
+```
+这样，我们不仅得到一个分数，还能了解打分的具体依据（优点、弱点和推理）。
+
+#### 3. 人工评价器 (Human Graders)
+
+人工评价是最灵活也是最耗时的方法，适用于评估机器难以判断的细微差别。
+
+**适用场景：**
+- 整体回答质量
+- 内容的深度与全面性
+- 表达的简洁性与关联性
+
+这个简单，我是这个接口的实现类QAQ
+
+---
+
+### 第三部分：Claude的tool use
 
 ---
 
@@ -199,8 +311,8 @@ text = chat(messages, stop_sequences=["```"])
 
 ---
 
-### 第七部分：Anthropic应用 - Claude Code和计算机使用
+### 第七部分：Anthropic应用 - Claude Code和computer use
 
 ---
 
-### 第八部分：代理和工作流
+### 第八部分：agent和workflow
